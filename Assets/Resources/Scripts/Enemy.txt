@@ -1,0 +1,17 @@
+return {
+	at = {
+		["start"] = function ()
+			this.Weapon = "normal"
+		end
+	},
+	weapons = {
+		["normal"] = {
+			rate = 500,
+			attack = function ()
+				shot = this.Spawn("EnemyShot", 0, -1.12)
+				shot.Rotation = -90
+				shot.Speed = 10
+			end
+		}
+	}
+}

@@ -1,0 +1,9 @@
+return {
+	at = {
+		start = function ()
+			this.Speed = 20
+			this.Rotation = 90
+			if this.ClosestEnemy then this.AimAt(this.ClosestEnemy.Position) end
+		end
+	}
+}

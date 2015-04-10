@@ -1,0 +1,11 @@
+return {
+	at = {
+		start = function ()
+		end
+	},
+	every = {
+		[500] = function ()
+			  this.Spawn("Enemy", 0, 3)
+		end
+	}
+}

@@ -1,0 +1,17 @@
+return {
+	at = {
+		start = function ()
+			this.Speed = 15
+			this.Weapon = "first"
+		end
+	},
+	weapons = {
+		["first"] =  {
+			rate = 100,
+			attack = function()
+				shot = this.Spawn("Bullet", 0.6, 0)
+				shot = this.Spawn("Bullet", -0.6, 0)
+			end
+		}
+	}
+}

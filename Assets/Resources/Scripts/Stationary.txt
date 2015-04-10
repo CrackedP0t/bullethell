@@ -1,0 +1,8 @@
+return {
+	at = {
+		["start"] = function ()
+			Speed = 0
+			Rotation = 0
+		end
+	}
+}
