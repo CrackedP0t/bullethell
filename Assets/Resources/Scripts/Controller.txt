@@ -1,10 +1,10 @@
 return {
-	at = {
+	on = {
 		start = function ()
 		end
 	},
 	every = {
-		[500] = function ()
+		[1000] = function ()
 			  this.Spawn("Enemy", 0, 3)
 		end
 	}

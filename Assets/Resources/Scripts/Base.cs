@@ -8,15 +8,12 @@ using MoonSharp.Interpreter;
 namespace BulletHell {
 	public class Base : MonoBehaviour {
 
-		public static void thing() {
-			print ("thing");
-		}
+		protected Dictionary<string, DynValue> callbacks = new Dictionary<string, DynValue> ();
 
-		public string hi {
-		get {
-			return "hi";
+		public void Callback(string name, params DynValue[] args) {
+			if (callbacks.ContainsKey (name))
+				controlScript.Call (callbacks [name], args);
 		}
-	}
 
 		public bool isEnemy;
 		public TextAsset ControlText;
@@ -24,22 +21,20 @@ namespace BulletHell {
 		protected Script controlScript;
 		protected DynValue controlData;
 
-		protected Table globals;
-
-		private Dictionary<string, DynValue> patterns = new Dictionary<string, DynValue>();
+		private Dictionary<string, DynValue> patterns = new Dictionary<string, DynValue> ();
 
 		public static Player Player {
 			get {
-				return UnityEngine.Object.FindObjectOfType<Player>();
+				return UnityEngine.Object.FindObjectOfType<Player> ();
 			}
 		}
 
 		public static List<Fighter> Enemies {
 			get {
 				List<Fighter> enemies = new List<Fighter>();
-				foreach (Fighter v in UnityEngine.Object.FindObjectsOfType<Fighter>()) {
+				foreach (Fighter v in UnityEngine.Object.FindObjectsOfType<Fighter> ()) {
 					if (v.isEnemy)
-						enemies.Add(v);
+						enemies.Add (v);
 				}
 				return enemies;
 			}
@@ -48,13 +43,13 @@ namespace BulletHell {
 		//----------------------------------------
 
 		public virtual Base Spawn(string path, float x=0, float y=0) {
-			GameObject thing = (GameObject)Instantiate (Resources.Load (path), new Vector2(x, y), Quaternion.Euler(Vector3.zero));
+			GameObject thing = (GameObject)Instantiate (Resources.Load (path), new Vector2 (x, y), Quaternion.Euler (Vector3.zero));
 			return thing.GetComponent<Base> ();
 		}
 
 		public void StartPattern(string name) {
 			if (patterns.ContainsKey (name)) {
-				scanPattern (patterns [name]);
+				scanPattern (patterns[name]);
 			} else {
 				Debug.LogError ("There is no pattern named \"" + name + "\"!", this);
 			}
@@ -73,7 +68,8 @@ namespace BulletHell {
 				foreach (KeyValuePair<DynValue, DynValue> pair in every) {
 					if (pair.Key.Type == DataType.Number) {
 						StartCoroutine (doEvery ((float)pair.Key.CastToNumber () / 1000, () => {
-							controlScript.Call (pair.Value); }));
+							controlScript.Call (pair.Value);
+						}));
 					} else {
 						Debug.LogWarning ("The key \"" + pair.Key.CastToString () + "\" is not a number!", this);
 					}
@@ -94,13 +90,23 @@ namespace BulletHell {
 			if (pattern.Table.Get ("at").CastToBool ()) {
 				Dictionary<DynValue, DynValue> at = pattern.Table.Get ("at").ToObject<Dictionary<DynValue, DynValue>> ();
 				foreach (KeyValuePair<DynValue, DynValue> pair in at) {
-					if (pair.Key.CastToString () == "start") {
-						controlScript.Call (pair.Value);
-					} else if (pair.Key.Type == DataType.Number) {
+					if (pair.Key.Type == DataType.Number) {
 						StartCoroutine (doAfter ((float)pair.Key.CastToNumber () / 1000, () => {
-							controlScript.Call (pair.Value); }));
+							controlScript.Call (pair.Value); 
+						}));
 					} else {
-						Debug.LogWarning ("The key \"" + pair.Key.CastToString () + "\" is not \"start\" or a number!", this);
+						Debug.LogWarning ("The key \"" + pair.Key.CastToString () + "\" is not a number!", this);
+					}
+				}
+			}
+
+			if (pattern.Table.Get ("on").CastToBool ()) {
+				Dictionary<DynValue, DynValue> on = pattern.Table.Get ("on").ToObject<Dictionary<DynValue, DynValue>> ();
+				foreach (KeyValuePair<DynValue, DynValue> pair in on) {
+					if (pair.Key.Type == DataType.String) {
+						callbacks[pair.Key.CastToString ()] = pair.Value;
+					} else {
+						Debug.LogWarning ("The key \"" + pair.Key.CastToString () + "\" is not a string!", this);
 					}
 				}
 			}
@@ -117,9 +123,9 @@ namespace BulletHell {
 			
 			controlScript = new Script ();
 			
-			controlScript.Options.DebugPrint = s=>{Debug.Log(s);};
+			controlScript.Options.DebugPrint = s=>{Debug.Log (s);};
 			
-			controlScript.Globals ["this"] = this;
+			controlScript.Globals["this"] = this;
 
 			/*foreach (MemberInfo info in this.GetType().GetMembers (BindingFlags.Static | BindingFlags.Public)) {
 				if (!info.Name.Contains("get_") && !info.Name.Contains("set_")) {
@@ -127,12 +133,21 @@ namespace BulletHell {
 				}
 				//info.Invoke(this, null);
 			}*/
-
-			controlScript.Globals["bullethell"] = this.GetType();
 			
+			controlScript.Globals["statics"] = UserData.CreateStatic(typeof(Base));
+
+			string staticcode = 
+				"setmetatable(_G, {\n" +
+				"\t__index = statics\n" +
+				"})";
+
+			controlScript.DoString (staticcode);
+
 			controlData = controlScript.DoString (text);
 			
-			scanPattern ((DynValue)controlData);
+			scanPattern (controlData);
+
+			Callback ("start");
 		}
 
 		protected IEnumerator doEvery(float seconds, Action action) {
@@ -152,7 +167,7 @@ namespace BulletHell {
 		}
 		
 		public virtual void Start () {
-			if (ControlText != default(TextAsset))
+			if (ControlText != default (TextAsset))
 				loadControlScript (ControlText.text);			            
 		}
 

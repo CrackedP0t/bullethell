@@ -17,6 +17,8 @@ namespace BulletHell {
 			}
 		}
 
+		public Movable Target = null;
+
 		private Rigidbody2D body = new Rigidbody2D ();
 
 		//---------------------------------------
@@ -73,7 +75,9 @@ namespace BulletHell {
 		//-------------------------------------
 		
 		private void updateBody() {
-			body.velocity = (!Frozen ? new Vector2(Mathf.Cos (Rotation * Mathf.Deg2Rad) * Speed, Mathf.Sin(Rotation * Mathf.Deg2Rad) * Speed) : Vector2.zero);
+			body.velocity = (!Frozen
+			                 	? new Vector2(Mathf.Cos (Rotation * Mathf.Deg2Rad) * Speed, Mathf.Sin(Rotation * Mathf.Deg2Rad) * Speed)
+			                 : Vector2.zero);
 		}
 
 		public void Awake() {
@@ -81,11 +85,13 @@ namespace BulletHell {
 		}
 
 		public override void Start () {
-		
 			base.Start ();
 		}
 
 		public override void Update () {
+			if (Target) {
+				AimAt(Target.Position);
+			}
 			updateBody ();
 			base.Update ();
 		}

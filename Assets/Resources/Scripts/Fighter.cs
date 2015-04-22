@@ -15,12 +15,6 @@ namespace BulletHell {
 		
 		public int FireRate = 500;
 
-		//=== Private and Protected Fields and Properties ===//
-		
-		protected DynValue weapons = new DynValue();
-
-		protected DynValue weaponFunction = new DynValue();
-
 		private string _weaponname = "";
 		public string Weapon {
 			get {
@@ -32,6 +26,12 @@ namespace BulletHell {
 				FireRate = (int)weapons.Table.Get (_weaponname).Table.Get ("rate").CastToNumber();
 			}
 		}
+
+		//=== Private and Protected Fields and Properties ===//
+		
+		protected DynValue weapons = new DynValue();
+
+		protected DynValue weaponFunction = new DynValue();
 
 		//=== Public Methods ===//
 
@@ -60,6 +60,7 @@ namespace BulletHell {
 		}
 
 		//=== Unity Specific Methods ===//
+
 		public override void Start () {
 			base.Start ();
 			StartCoroutine(startFiring ());

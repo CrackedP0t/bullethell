@@ -1,9 +1,6 @@
 return {
 	at = {
-		start = function ()
-			this.Speed = 15
-			this.Weapon = "first"
-		end
+		
 	},
 	weapons = {
 		["first"] =  {
@@ -13,5 +10,11 @@ return {
 				shot = this.Spawn("Bullet", -0.6, 0)
 			end
 		}
+	},
+	on = {
+		start = function ()
+			this.Speed = 15
+			this.Weapon = "first"
+		end
 	}
 }
