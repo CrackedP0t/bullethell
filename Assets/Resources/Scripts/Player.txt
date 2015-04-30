@@ -14,7 +14,7 @@ return {
 	on = {
 		start = function ()
 			this.Speed = 15
-			this.Weapon = "first"
+			this.Weapons["first"].Activated = true
 		end
 	}
 }

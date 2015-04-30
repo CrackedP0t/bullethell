@@ -111,10 +111,11 @@ MonoBehaviour:
   m_GameObject: {fileID: 229677398}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 383e3507498be93469d1ca2ebc57dff3, type: 3}
+  m_Script: {fileID: 11500000, guid: c742f8842bcbeb04fb40378dffaca5b1, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEnemy: 0
+  Tags: []
+  IsEnemy: 0
   ControlText: {fileID: 4900000, guid: d2f72be013a5d4441a79301f1d6a7ca4, type: 3}
 --- !u!4 &229677400
 Transform:
@@ -141,7 +142,7 @@ Prefab:
       objectReference: {fileID: 0}
     - target: {fileID: 478990, guid: aac4a6f854551ab419928d8ae88d69b9, type: 2}
       propertyPath: m_LocalPosition.y
-      value: 3.20000005
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 478990, guid: aac4a6f854551ab419928d8ae88d69b9, type: 2}
       propertyPath: m_LocalPosition.z
@@ -166,10 +167,6 @@ Prefab:
     - target: {fileID: 478990, guid: aac4a6f854551ab419928d8ae88d69b9, type: 2}
       propertyPath: m_RootOrder
       value: 1
-      objectReference: {fileID: 0}
-    - target: {fileID: 127784, guid: aac4a6f854551ab419928d8ae88d69b9, type: 2}
-      propertyPath: m_IsActive
-      value: 0
       objectReference: {fileID: 0}
     m_RemovedComponents: []
   m_ParentPrefab: {fileID: 100100000, guid: aac4a6f854551ab419928d8ae88d69b9, type: 2}
@@ -390,14 +387,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b9ac07beaaf83f243b4f169c9cb1108c, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEnemy: 0
+  Tags: []
+  IsEnemy: 0
   ControlText: {fileID: 4900000, guid: 2b948d2999f607748ba5bfdcc852618d, type: 3}
   Speed: 5
   Rotation: 0
   Frozen: 0
+  Target: {fileID: 0}
   Health: 50
-  CanFire: 1
-  FireRate: 1000
 --- !u!4 &1476930173
 Transform:
   m_ObjectHideFlags: 0
@@ -406,7 +403,7 @@ Transform:
   m_GameObject: {fileID: 1476930168}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 0, z: 0}
-  m_LocalScale: {x: .400000006, y: .400000006, z: 1.28567171}
+  m_LocalScale: {x: .400000006, y: .400000006, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 2

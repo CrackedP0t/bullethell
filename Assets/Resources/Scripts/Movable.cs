@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using BulletHell;
 
 namespace BulletHell {
-	public class Movable : Base {
+	public class Movable : Entity {
 
 		public float Speed = 0;
 		public float Rotation = 0;
@@ -17,15 +17,16 @@ namespace BulletHell {
 			}
 		}
 
+		[HideInInspector]
 		public Movable Target = null;
 
 		private Rigidbody2D body = new Rigidbody2D ();
 
 		//---------------------------------------
 
-		public override Base Spawn(string path, float x=0, float y=0) {
+		public override Entity Spawn(string path, float x=0, float y=0) {
 			GameObject thing = (GameObject)Instantiate (Resources.Load (path), new Vector2(x + Position.x, y + Position.y), Quaternion.Euler(Vector3.zero));
-			return thing.GetComponent<Base> ();
+			return thing.GetComponent<Entity> ();
 		}
 
 		public void SetPosition(float x, float y) {

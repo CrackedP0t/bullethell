@@ -1,6 +1,6 @@
 return {
-	at = {
-		
+	tags = {
+		"enemy"
 	},
 	weapons = {
 		["normal"] = {
@@ -9,13 +9,12 @@ return {
 				shot = this.Spawn("EnemyShot", 0, -1.12)
 				shot.Rotation = -90
 				shot.Speed = 10
-				shot.Target = Player
 			end
 		}
 	},
 	on = {
 		start = function ()
-			this.Weapon = "normal"
+			this.Weapons["normal"].Activated = true
 		end
 	}
 }

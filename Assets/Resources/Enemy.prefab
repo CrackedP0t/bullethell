@@ -26,8 +26,8 @@ Transform:
   m_PrefabInternal: {fileID: 100100000}
   m_GameObject: {fileID: 127784}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 3.20000005, z: 0}
-  m_LocalScale: {x: .400000006, y: .400000006, z: 1.28567171}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: .400000006, y: .400000006, z: 0}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
@@ -149,14 +149,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: fe64f59a7ee987a449fdd1a9053da43a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEnemy: 1
+  Tags: []
+  IsEnemy: 1
   ControlText: {fileID: 4900000, guid: cd52ceb61aa4f0e4ba6cd24ac3bee4c9, type: 3}
   Speed: 0
   Rotation: 0
   Frozen: 0
+  Target: {fileID: 0}
   Health: 50
-  CanFire: 1
-  FireRate: 500
 --- !u!212 &21284338
 SpriteRenderer:
   m_ObjectHideFlags: 1

@@ -1,39 +1,21 @@
 ﻿using UnityEngine;
 using System.Collections;
-using System;
+using System.Collections.Generic;
 using BulletHell;
 using MoonSharp.Interpreter;
 
 namespace BulletHell {
 	public class Fighter : Movable {
 
-		//=== Public Fields and Properties ===//
+		// Public Fields and Properties
 
 		public int Health = 50;
 
-		public bool CanFire = true;
-		
-		public int FireRate = 500;
+		public Dictionary<string, Weapon> Weapons = new Dictionary<string, Weapon> ();
 
-		private string _weaponname = "";
-		public string Weapon {
-			get {
-				return _weaponname;
-			}
-			set {
-				_weaponname = value;
-				weaponFunction = weapons.Table.Get (_weaponname).Table.Get ("attack");
-				FireRate = (int)weapons.Table.Get (_weaponname).Table.Get ("rate").CastToNumber();
-			}
-		}
+		// Private and Protected Fields and Properties
 
-		//=== Private and Protected Fields and Properties ===//
-		
-		protected DynValue weapons = new DynValue();
-
-		protected DynValue weaponFunction = new DynValue();
-
-		//=== Public Methods ===//
+		// Public Methods
 
 		public void Hit(int damage) {
 			Health = Health - damage;
@@ -42,28 +24,22 @@ namespace BulletHell {
 			}
 		}
 
-		//=== Private and Protected methods ===//
+		// Private and Protected Methods
 
 		protected override void scanPattern(DynValue pattern) {
 			if (pattern.Table.Get ("weapons").CastToBool ()) {
-				weapons = pattern.Table.Get ("weapons");
+				Dictionary<string, DynValue> weapons = pattern.Table.Get ("weapons").ToObject<Dictionary<string, DynValue>> ();
+				foreach (KeyValuePair<string, DynValue> pair in weapons) {
+					Weapons.Add(pair.Key, new Weapon(pair.Value, controlScript, this));
+				}
 			}
 			base.scanPattern (pattern);
 		}
 
-		IEnumerator startFiring() {
-			while (true) {
-				yield return new WaitForSeconds ((float)FireRate / 1000);
-				if (weaponFunction.Type == DataType.Function && CanFire)
-					controlScript.Call (weaponFunction);
-			}
-		}
-
-		//=== Unity Specific Methods ===//
+		// Unity Specific Methods
 
 		public override void Start () {
 			base.Start ();
-			StartCoroutine(startFiring ());
 		}
 
 	}

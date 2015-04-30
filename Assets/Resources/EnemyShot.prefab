@@ -79,11 +79,13 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 78a6a20a453808b4e90bf1f0868a89b2, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  isEnemy: 1
+  Tags: []
+  IsEnemy: 1
   ControlText: {fileID: 0}
   Speed: 0
   Rotation: 0
   Frozen: 0
+  Target: {fileID: 0}
   Damage: 10
 --- !u!212 &21244290
 SpriteRenderer:

@@ -22,8 +22,8 @@ namespace BulletHell {
 
 		void OnTriggerEnter2D(Collider2D collision)
 		{
-			Base collisionbase = collision.gameObject.GetComponent<Base> ();
-			if (collisionbase.isEnemy != this.isEnemy && collisionbase is Fighter) {
+			Entity collisionbase = collision.gameObject.GetComponent<Entity> ();
+			if (collisionbase.IsEnemy != this.IsEnemy && collisionbase is Fighter) {
 				Fighter collisionsoldier = (Fighter)collisionbase;
 				collisionsoldier.Hit(this.Damage);
 				Destroy(this.gameObject);

@@ -1,5 +1,7 @@
 ﻿using UnityEngine;
+using System;
 using System.Collections;
+using System.Collections.Generic;
 using BulletHell;
 using MoonSharp.Interpreter;
 
@@ -7,18 +9,16 @@ namespace BulletHell {
 	public class Player : Fighter {
 
 		public override void Start () {
-			this.isEnemy = false;
+			IsEnemy = false;
 			base.Start ();
 		}
 
 		public override void  Update () {
 			Frozen = Input.GetAxis ("Horizontal") == 0 && Input.GetAxis ("Vertical") == 0;
 
-			if (!CanFire && Input.GetAxis ("Fire") > 0 && weaponFunction != default(DynValue)) {
-				controlScript.Call(weaponFunction);
+			foreach (KeyValuePair<string, Weapon> pair in Weapons) {
+				pair.Value.CanFire = (Input.GetButton("Fire"));
 			}
-
-			CanFire = Input.GetAxis ("Fire") > 0;
 
 			SetVelocity (new Vector2 (Input.GetAxis ("Horizontal"), Input.GetAxis ("Vertical")) * Speed);
 
