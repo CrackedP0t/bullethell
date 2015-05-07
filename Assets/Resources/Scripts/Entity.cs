@@ -180,12 +180,12 @@ namespace BulletHell
 				}
 				//info.Invoke(this, null);
 			}*/
-			
-			controlScript.Globals ["statics"] = UserData.CreateStatic (typeof(Entity));
 
-			controlScript.DoString ("setmetatable(_G, {\n" +
-				"\t__index = statics\n" +
-				"})");
+			Table globalMetaTable = new Table (controlScript);
+
+			globalMetaTable ["__index"] = UserData.CreateStatic (typeof(Entity));
+
+			controlScript.Globals.MetaTable = globalMetaTable;
 
 			controlData = controlScript.DoString (text);
 			

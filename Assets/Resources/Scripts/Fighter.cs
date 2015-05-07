@@ -18,6 +18,7 @@ namespace BulletHell {
 		// Public Methods
 
 		public void Hit(int damage) {
+			Callback ("hit");
 			Health = Health - damage;
 			if (Health <= 0) {
 				Kill ();
@@ -30,7 +31,7 @@ namespace BulletHell {
 			if (pattern.Table.Get ("weapons").CastToBool ()) {
 				Dictionary<string, DynValue> weapons = pattern.Table.Get ("weapons").ToObject<Dictionary<string, DynValue>> ();
 				foreach (KeyValuePair<string, DynValue> pair in weapons) {
-					Weapons.Add(pair.Key, new Weapon(pair.Value, controlScript, this));
+					Weapons.Add(pair.Key, new Weapon(pair.Value.Table, controlScript, this));
 				}
 			}
 			base.scanPattern (pattern);
