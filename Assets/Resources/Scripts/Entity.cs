@@ -10,17 +10,8 @@ namespace BulletHell
 	public class Entity : MonoBehaviour
 	{
 		public List<string> Tags = new List<string> ();
-		protected Dictionary<string, DynValue> callbacks = new Dictionary<string, DynValue> ();
 
-		public void Callback (string name, params DynValue[] args)
-		{
-			if (callbacks.ContainsKey (name))
-				controlScript.Call (callbacks [name], args);
-
-			/*MethodInfo cinfo = this.GetType ().GetMethod (name, BindingFlags.DeclaredOnly | BindingFlags.Instance | BindingFlags.NonPublic);
-			if (cinfo != null)
-				cinfo.Invoke (this, (System.Object[])args);*/
-		}
+		protected CallbackDict Callbacks;
 
 		public bool IsEnemy;
 		public TextAsset ControlText;
@@ -92,7 +83,7 @@ namespace BulletHell
 
 		public void Kill ()
 		{
-			Callback ("kill");
+			Callbacks.Call ("kill");
 			Destroy (gameObject);
 		}
 
@@ -142,7 +133,7 @@ namespace BulletHell
 				Dictionary<DynValue, DynValue> on = pattern.Table.Get ("on").ToObject<Dictionary<DynValue, DynValue>> ();
 				foreach (KeyValuePair<DynValue, DynValue> pair in on) {
 					if (pair.Key.Type == DataType.String) {
-						callbacks [pair.Key.CastToString ()] = pair.Value;
+						Callbacks [pair.Key.CastToString ()].Add (pair.Value);
 					} else {
 						Debug.LogWarning ("The key \"" + pair.Key.CastToString () + "\" is not a string!", this);
 					}
@@ -156,39 +147,17 @@ namespace BulletHell
 		private void loadControlScript (string text)
 		{
 			UserData.RegistrationPolicy = MoonSharp.Interpreter.Interop.InteropRegistrationPolicy.Automatic;
-			/*UserData.RegisterType<Entity> ();
-			UserData.RegisterType<Player> ();
-			UserData.RegisterType<Movable> ();
-			UserData.RegisterType<Fighter> ();
-			UserData.RegisterType<Bullet> ();
-			UserData.RegisterType<Weapon> ();
-			UserData.RegisterType<Vector2> ();
-			UserData.RegisterType<Rigidbody2D> ();
-			UserData.RegisterType<List<string>> ();
-			UserData.RegisterType<Dictionary<string, Weapon>> ();*/
-
-			controlScript = new Script ();
 			
-			controlScript.Options.DebugPrint = s => {
-				Debug.Log (s);};
+			controlScript.Options.DebugPrint = (s)=>Debug.Log (s);
 			
 			controlScript.Globals ["this"] = this;
 
-			/*foreach (MemberInfo info in this.GetType().GetMembers (BindingFlags.Static | BindingFlags.Public)) {
-				if (!info.Name.Contains("get_") && !info.Name.Contains("set_")) {
-					controlScript.Globals[info.Name] = 
-				}
-				//info.Invoke(this, null);
-			}*/
-
 			Table globalMetaTable = new Table (controlScript);
-
 			globalMetaTable ["__index"] = UserData.CreateStatic (typeof(Entity));
-
 			controlScript.Globals.MetaTable = globalMetaTable;
 
 			controlData = controlScript.DoString (text);
-			
+
 			scanPattern (controlData);
 		}
 
@@ -206,21 +175,28 @@ namespace BulletHell
 			action ();
 		}
 
-		void Awake ()
+		public virtual void Awake ()
 		{
+			controlScript = new Script ();
+
+			Callbacks = new CallbackDict (controlScript);
+
 			Application.targetFrameRate = 60;
 		}
 		
 		public virtual void Start ()
 		{
+
+
 			if (ControlText != default (TextAsset))
-				loadControlScript (ControlText.text);	
-			Callback ("start");
+				loadControlScript (ControlText.text);
+
+			Callbacks.Call ("start");
 		}
 
 		public virtual void Update ()
 		{
-			Callback ("update", DynValue.NewNumber (Time.deltaTime));
+			Callbacks.Call ("update", DynValue.NewNumber (Time.deltaTime));
 		}
 	}
 }

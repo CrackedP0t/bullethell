@@ -18,7 +18,7 @@ namespace BulletHell {
 		// Public Methods
 
 		public void Hit(int damage) {
-			Callback ("hit");
+			Callbacks.Call ("hit");
 			Health = Health - damage;
 			if (Health <= 0) {
 				Kill ();

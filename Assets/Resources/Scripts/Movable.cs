@@ -81,7 +81,8 @@ namespace BulletHell {
 			                 : Vector2.zero);
 		}
 
-		public void Awake() {
+		public override void Awake() {
+			base.Awake ();
 			this.body = GetComponent<Rigidbody2D> ();
 		}
 
