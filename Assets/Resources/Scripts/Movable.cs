@@ -1,6 +1,5 @@
-﻿using UnityEngine;
-using System.Collections.Generic;
-using BulletHell;
+﻿using System.Collections.Generic;
+using UnityEngine;
 
 namespace BulletHell {
 	public class Movable : Entity {
@@ -8,7 +7,7 @@ namespace BulletHell {
 		public float Speed = 0;
 		public float Rotation = 0;
 		public bool Frozen = false;
-		public Vector2 Position{
+		public Vector2 Position {
 			get {
 				return body.position;
 			}
@@ -69,9 +68,9 @@ namespace BulletHell {
 			Rotation = Mathf.Atan2 (target.y - Position.y, target.x - Position.x) * Mathf.Rad2Deg;
 		}
 
-//		public void AimAt(Movable target) {
-//			
-//		}
+		public void AimAt(Movable target) {
+			AimAt (target.Position);
+		}
 
 		//-------------------------------------
 		
@@ -81,12 +80,8 @@ namespace BulletHell {
 			                 : Vector2.zero);
 		}
 
-		public override void Awake() {
-			base.Awake ();
-			this.body = GetComponent<Rigidbody2D> ();
-		}
-
 		public override void Start () {
+			this.body = GetComponent<Rigidbody2D> ();
 			base.Start ();
 		}
 

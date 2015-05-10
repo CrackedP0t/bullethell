@@ -1,8 +1,7 @@
-﻿using UnityEngine;
-using System.Reflection;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
-using System;
+using UnityEngine;
 using MoonSharp.Interpreter;
 
 namespace BulletHell
@@ -19,30 +18,18 @@ namespace BulletHell
 		protected DynValue controlData = DynValue.NewNil ();
 		private Dictionary<string, DynValue> patterns = new Dictionary<string, DynValue> ();
 
-		/*protected void update(System.Object[] dt) {
-			print (dt);
-		}*/
+		public static Player Player = null;
 
-		public static Player Player {
-			get {
-				return UnityEngine.Object.FindObjectOfType<Player> ();
-			}
-		}
+		public static List<Entity> Entities = new List<Entity> ();
 
 		public static List<Fighter> Enemies {
 			get {
 				List<Fighter> enemies = new List<Fighter> ();
-				foreach (Fighter v in UnityEngine.Object.FindObjectsOfType<Fighter> ()) {
-					if (v.IsEnemy)
-						enemies.Add (v);
+				foreach (Entity v in Entities) {
+					if (v.IsEnemy && v is Fighter)
+						enemies.Add ((Fighter)v);
 				}
 				return enemies;
-			}
-		}
-
-		public static List<Entity> Entities {
-			get {
-				return new List<Entity> (UnityEngine.Object.FindObjectsOfType<Entity> ());
 			}
 		}
 		
@@ -145,12 +132,14 @@ namespace BulletHell
 		}
 
 		private void loadControlScript (string text)
-		{
-			UserData.RegistrationPolicy = MoonSharp.Interpreter.Interop.InteropRegistrationPolicy.Automatic;
-			
-			controlScript.Options.DebugPrint = (s)=>Debug.Log (s);
+		{		
+			controlScript.Options.DebugPrint = (s)=>Debug.Log (s, this);
+
+
 			
 			controlScript.Globals ["this"] = this;
+
+			controlScript.Globals ["whatnotg"] = new Action(() => print("whatnot"));
 
 			Table globalMetaTable = new Table (controlScript);
 			globalMetaTable ["__index"] = UserData.CreateStatic (typeof(Entity));
@@ -177,6 +166,10 @@ namespace BulletHell
 
 		public virtual void Awake ()
 		{
+			UserData.RegistrationPolicy = MoonSharp.Interpreter.Interop.InteropRegistrationPolicy.Automatic;
+
+			Entities.Add (this);
+
 			controlScript = new Script ();
 
 			Callbacks = new CallbackDict (controlScript);
@@ -186,8 +179,6 @@ namespace BulletHell
 		
 		public virtual void Start ()
 		{
-
-
 			if (ControlText != default (TextAsset))
 				loadControlScript (ControlText.text);
 
@@ -197,6 +188,10 @@ namespace BulletHell
 		public virtual void Update ()
 		{
 			Callbacks.Call ("update", DynValue.NewNumber (Time.deltaTime));
+		}
+
+		public virtual void OnDestroy() {
+			Entities.Remove (this);
 		}
 	}
 }

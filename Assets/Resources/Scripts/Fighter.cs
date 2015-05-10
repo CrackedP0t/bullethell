@@ -1,7 +1,4 @@
-﻿using UnityEngine;
-using System.Collections;
-using System.Collections.Generic;
-using BulletHell;
+﻿using System.Collections.Generic;
 using MoonSharp.Interpreter;
 
 namespace BulletHell {
@@ -9,19 +6,20 @@ namespace BulletHell {
 
 		// Public Fields and Properties
 
+		public bool Invulnerable = false;
+
 		public int Health = 50;
 
 		public Dictionary<string, Weapon> Weapons = new Dictionary<string, Weapon> ();
 
-		// Private and Protected Fields and Properties
-
 		// Public Methods
 
-		public void Hit(int damage) {
-			Callbacks.Call ("hit");
-			Health = Health - damage;
-			if (Health <= 0) {
-				Kill ();
+		public virtual void Hit(int damage) {
+			Callbacks.Call ("hit", DynValue.NewNumber(damage));
+			if (!Invulnerable) {
+				Health = Health - damage;
+				if (Health <= 0)
+					Kill ();
 			}
 		}
 
@@ -36,12 +34,5 @@ namespace BulletHell {
 			}
 			base.scanPattern (pattern);
 		}
-
-		// Unity Specific Methods
-
-		public override void Start () {
-			base.Start ();
-		}
-
 	}
 }

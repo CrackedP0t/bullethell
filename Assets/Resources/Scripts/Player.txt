@@ -13,6 +13,7 @@ return {
 	},
 	on = {
 		start = function ()
+			--lambda()
 			this.Speed = 15
 			this.Weapons["first"].Activated = true
 		end

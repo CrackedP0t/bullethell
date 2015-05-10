@@ -1,32 +1,27 @@
-﻿using UnityEngine;
-using System.Collections;
-using System;
+﻿using System.Collections;
+using UnityEngine;
 using MoonSharp.Interpreter;
-using BulletHell;
 
 namespace BulletHell {
 	public class Bullet : Movable {
 
 		public int Damage = 10;
 
-		public override void Start ()
-		{
-			base.Start ();
-		}
-
 		public override void Update() {
 			if (!GetComponent<SpriteRenderer> ().isVisible)
-				Destroy (gameObject);
+				Kill ();
 			base.Update ();
 		}
 
 		void OnTriggerEnter2D(Collider2D collision)
 		{
-			Entity collisionbase = collision.gameObject.GetComponent<Entity> ();
-			if (collisionbase.IsEnemy != this.IsEnemy && collisionbase is Fighter) {
-				Fighter collisionsoldier = (Fighter)collisionbase;
-				collisionsoldier.Hit(this.Damage);
-				Destroy(this.gameObject);
+			Callbacks.Call ("collision", DynValue.FromObject(controlScript, collision));
+
+			Entity collisionentity = collision.gameObject.GetComponent<Entity> ();
+			if (collisionentity.IsEnemy != IsEnemy && collisionentity is Fighter) {
+				Fighter collisionfighter = (Fighter)collisionentity;
+				collisionfighter.Hit(Damage);
+				Kill ();
 			}
 		}
 
