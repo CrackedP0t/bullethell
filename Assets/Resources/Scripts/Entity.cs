@@ -18,7 +18,7 @@ namespace BulletHell
 		protected DynValue controlData = DynValue.NewNil ();
 		private Dictionary<string, DynValue> patterns = new Dictionary<string, DynValue> ();
 
-		public static Player Player;
+		public static Player Player = null;
 
 		public static List<Entity> Entities = new List<Entity> ();
 
