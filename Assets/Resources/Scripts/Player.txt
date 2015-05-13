@@ -4,7 +4,7 @@ return {
 	},
 	weapons = {
 		["first"] =  {
-			rate = 100,
+			rate = 50,
 			attack = function()
 				shot = this.Spawn("Bullet", 0.6, 0)
 				shot = this.Spawn("Bullet", -0.6, 0)
@@ -13,7 +13,6 @@ return {
 	},
 	on = {
 		start = function ()
-			--lambda()
 			this.Speed = 15
 			this.Weapons["first"].Activated = true
 		end

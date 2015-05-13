@@ -10,7 +10,7 @@ namespace BulletHell
 	{
 		public List<string> Tags = new List<string> ();
 
-		protected CallbackDict Callbacks;
+		public CallbackDict Callbacks;
 
 		public bool IsEnemy;
 		public TextAsset ControlText;

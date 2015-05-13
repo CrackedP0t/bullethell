@@ -8,13 +8,13 @@ namespace BulletHell {
 
 		public bool Invulnerable = false;
 
-		public int Health = 50;
+		public float Health = 50;
 
 		public Dictionary<string, Weapon> Weapons = new Dictionary<string, Weapon> ();
 
 		// Public Methods
 
-		public virtual void Hit(int damage) {
+		public virtual void Hit(float damage) {
 			Callbacks.Call ("hit", DynValue.NewNumber(damage));
 			if (!Invulnerable) {
 				Health = Health - damage;

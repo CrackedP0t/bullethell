@@ -14,8 +14,6 @@ namespace BulletHell
 		public int Rate;
 		
 		public Action Attack = ()=>{};
-
-		private Movable parent;
 		
 		public Weapon (int rate, Action attack) {
 			Rate = rate;
@@ -23,6 +21,10 @@ namespace BulletHell
 			
 			start ();
 		}
+
+		private Movable parent;
+
+		private int totalTime = 0;
 
 		public Weapon (Table data, Script script, Movable newparent) {
 			parent = newparent;
@@ -41,15 +43,14 @@ namespace BulletHell
 		}
 
 		private void start() {
-			parent.StartCoroutine (startFiring());
-		}
+			parent.Callbacks.SetObject ("update", new Action (()=>{
+				totalTime += (int)(Time.deltaTime * 1000);
 
-		private IEnumerator startFiring() {
-			while (true) {
-				yield return new WaitForSeconds((float)Rate / 1000);
-				if (Activated && CanFire)
+				for (int i = 0; i < (int)(totalTime / Rate) /*&& Activated && CanFire*/; i++)
 					Attack();
-			}
+
+				totalTime = totalTime % Rate;
+			}));
 		}
 	}
 }
